@@ -1,4 +1,126 @@
-﻿window.focusElementById = (windowId) => {
+﻿window.registerViewportChangeCallbackForChart = (dotnetHelper) => {
+    let _dotnetHelper = dotnetHelper;
+    window.addEventListener('resize', () => {
+        _dotnetHelper.invokeMethodAsync('OnResize', window.innerWidth, window.innerHeight);
+    });
+}
+
+window.initGoldenLayout = () => {
+
+    //myLayout.registerComponent('blazor-component', function (container, state) {
+    //    let componentId = "blazor-component-" + Math.random().toString(36).substr(2, 9);
+    //    container.getElement().html(`<div id="${componentId}"></div>`);
+
+    //    // Observe and add the Blazor component when available
+    //    let observer = new MutationObserver(() => {
+    //        let targetElement = document.getElementById(componentId);
+    //        if (targetElement) {
+    //            setTimeout(() => {
+    //                Blazor.rootComponents.add(targetElement, state.componentName, {});
+    //            }, 1000);
+    //            observer.disconnect();
+    //        }
+    //    });
+
+    //    observer.observe(document.body, { childList: true, subtree: true });
+    //});
+
+    var config = {
+        settings: {
+            showPopoutIcon: false
+        },
+        content: [{
+            type: 'row',
+            content: [
+                {
+                    type: 'component',
+                    componentName: 'windows-component',
+                    title: 'Windows 1',
+                    id: 'windows1'
+                },
+                {
+                    type: 'component',
+                    componentName: 'windows-component',
+                    title: 'Windows 2',
+                    id: 'windows2'
+                },
+                {
+                    type: 'component',
+                    componentName: 'windows-component',
+                    title: 'Windows 3',
+                    id: 'windows3'
+                }
+            ]
+        }]
+    };
+
+    var myLayout = new GoldenLayout(config);
+
+    myLayout.registerComponent('windows-component', function (container, state) {
+        //container.getElement().html('<h2>' + state.text + '</h2>');
+
+        // Observe and add the Blazor component when available
+        let observer = new MutationObserver(() => {
+            let els = document.getElementsByClassName('lm_content');
+            let sourceElement1 = document.getElementById('windows-1');
+            let sourceElement2 = document.getElementById('windows-2');
+            let sourceElement3 = document.getElementById('windows-3');
+            if (sourceElement1 && sourceElement2 && sourceElement3 && els.length == 3) {
+                let targetElement1 = els[0];
+                let targetElement2 = els[1];
+                let targetElement3 = els[2];
+                $(sourceElement1).appendTo($(targetElement1));
+                $(sourceElement2).appendTo($(targetElement2));
+                $(sourceElement3).appendTo($(targetElement3));
+                observer.disconnect();
+            }
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+    });
+
+    /// Callback for every created stack
+    myLayout.on('stackCreated', function (stack) {
+
+        //HTML for the colorDropdown is stored in a template tag
+        var colorDropdown = $($('template').html()),
+            colorDropdownBtn = colorDropdown.find('.selectedColor');
+
+        //var setColor = function (color) {
+        //    var container = stack.getActiveContentItem().container;
+
+        //    // Set the color on both the dropDown and the background
+        //    colorDropdownBtn.css('background-color', color);
+        //    container.getElement().css('background-color', color);
+
+        //    // Update the state
+        //    container.extendState({ color: color });
+        //};
+
+        // Add the colorDropdown to the header
+        stack.header.controlsContainer.prepend(colorDropdown);
+
+        // Update the color initially and whenever the tab changes
+        stack.on('activeContentItemChanged', function (contentItem) {
+            //setColor(contentItem.container.getState().color);
+        });
+
+        // Update the color when the user selects a different color
+        // from the dropdown
+        colorDropdown.find('li').click(function () {
+            //setColor($(this).css('background-color'));
+        });
+    });
+
+    myLayout.init();
+
+    for (var i = 0; i < 3; i++) {
+        new MainSplitter("main-splitter-container-" + i);
+        new Splitter("clusters-container-" + i);
+    }
+};
+
+window.focusElementById = (windowId) => {
     const element = document.getElementById(windowId);
     if (element) {
         console.log(element);
@@ -85,7 +207,6 @@ function getScrollEvent(gridTableId) {
     }
 }
 
-
 function getWheelEvent(historyTableId) {
     let parent = document.getElementById(historyTableId);
     if (parent) {
@@ -142,3 +263,45 @@ function getWheelEvent(historyTableId) {
 //        }
 //    }
 //}
+
+//Chart Panel
+window.getElementSizeById = (id) => {
+    var el = document.getElementById(id);
+    if (!el) return null;
+
+    return {
+        width: el.clientWidth,
+        height: el.clientHeight
+    };
+};
+
+window.getElementSizeByClass = (className) => {
+    var el = document.getElementsByClassName(className);
+    if (!el || el.length == 0) return null;
+
+    return {
+        width: el[0].clientWidth,
+        height: el[0].clientHeight
+    };
+};
+
+window.setElementStyle = (className, style) => {
+    var el = document.getElementsByClassName(className);
+    if (!el || el.length == 0) return;
+
+    el[0].style = style;
+};
+
+window.setElementWidth = (className, width) => {
+    var el = document.getElementsByClassName(className);
+    if (!el || el.length == 0) return;
+
+    el[0].style.width = width + "px";
+};
+
+window.setElementMarginLeft = (className, marginLeft) => {
+    var el = document.getElementsByClassName(className);
+    if (!el || el.length == 0) return;
+
+    el[0].style.marginLeft = marginLeft + "px";
+};

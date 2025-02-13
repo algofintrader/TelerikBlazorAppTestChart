@@ -1,0 +1,112 @@
+﻿@using Telerik.DataSource.Extensions
+@inject IJSRuntime JSRuntime
+@using TelerikBlazorAppTestChart.Components.Common
+@using Toolbelt.Blazor.HotKeys2
+@inject HotKeys HotKeys 
+
+<div class="split-pane">
+    <TelerikGrid @ref="Grid1"
+                Id="@GridId1"
+                Class="grid-cluster"
+                EnableLoaderContainer="true"
+                RowHeight="15"
+                Height="100%"
+                Data="@ClusterData1"
+                TItem="@ChartComponent.TradeApi"
+                ScrollMode="@GridScrollMode.Virtual"
+                Pageable="false"
+                Sortable="false"
+                PageSize="150">
+        <GridColumns>
+            <GridColumn Width="1fr" Field="@nameof(ChartComponent.TradeApi.Volume)" />
+        </GridColumns>
+    </TelerikGrid>
+</div>
+<div class="split-pane">
+    <TelerikGrid @ref="Grid2"
+                Id="@GridId2"
+                Class="grid-cluster"
+                EnableLoaderContainer="true"
+                RowHeight="15"
+                Height="100%"
+                Data="@ClusterData2"
+                TItem="@ChartComponent.TradeApi"
+                ScrollMode="@GridScrollMode.Virtual"
+                Pageable="false"
+                Sortable="false"
+                PageSize="150">
+        <GridColumns>
+            <GridColumn Width="1fr" Field="@nameof(ChartComponent.TradeApi.Volume)" />
+        </GridColumns>
+    </TelerikGrid>
+</div>
+<div class="split-pane">
+    <TelerikGrid @ref="Grid3"
+                Id="@GridId3"
+                Class="grid-cluster"
+                EnableLoaderContainer="true"
+                RowHeight="15"
+                Height="100%"
+                Data="@ClusterData3"
+                TItem="@ChartComponent.TradeApi"
+                ScrollMode="@GridScrollMode.Virtual"
+                Pageable="false"
+                Sortable="false"
+                PageSize="150">
+        <GridColumns>
+            <GridColumn Width="1fr" Field="@nameof(ChartComponent.TradeApi.Volume)" />
+        </GridColumns>
+    </TelerikGrid>
+</div>
+
+@code {
+
+    public List<ChartComponent.TradeApi> ClusterData1 { get; set; }
+    public List<ChartComponent.TradeApi> ClusterData2 { get; set; }
+    public List<ChartComponent.TradeApi> ClusterData3 { get; set; }
+
+    public TelerikGrid<ChartComponent.TradeApi> Grid1 { get; set; }
+    public TelerikGrid<ChartComponent.TradeApi> Grid2 { get; set; }
+    public TelerikGrid<ChartComponent.TradeApi> Grid3 { get; set; }
+
+    private string GridId1 { get; set; } = Guid.NewGuid().ToString();
+    private string GridId2 { get; set; } = Guid.NewGuid().ToString();
+    private string GridId3 { get; set; } = Guid.NewGuid().ToString();
+
+    protected override void OnInitialized()
+    {
+        BuildInitialCluster(3000);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            
+        }
+    }
+
+    private int Scale = 1;
+    private void BuildInitialCluster(decimal bestbid)
+    {
+        try
+        {
+            ClusterData1 = new();
+            ClusterData2 = new();
+            ClusterData3 = new();
+
+            for (var i = 0; i < 100; i++)
+            {
+                ClusterData1.Add(new ChartComponent.TradeApi() { Price = i, Volume = new Random().Next(1, 2000) });
+                ClusterData2.Add(new ChartComponent.TradeApi() { Price = i, Volume = new Random().Next(1, 2000) });
+                ClusterData3.Add(new ChartComponent.TradeApi() { Price = i, Volume = new Random().Next(1, 2000) });
+            }
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
+    }
+}

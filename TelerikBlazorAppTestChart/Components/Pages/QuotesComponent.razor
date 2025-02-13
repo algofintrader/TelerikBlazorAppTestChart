@@ -10,32 +10,28 @@ OnRowRender="@RowRender"
 *@
 
 <TelerikGrid @ref="TicksGrid" 
-Id="@GridTableId"
-EnableLoaderContainer="true"
-             OnStateChanged="@OnStateChanged"
-RowHeight="15"
-Height="30vh"
-Data="@Ticks"
-
-TItem="@ChartComponent.TradeApi"
-ScrollMode="@GridScrollMode.Virtual"
-Pageable="false"
-Sortable="false"
-PageSize="150">
+    Id="@GridTableId"
+    EnableLoaderContainer="true"
+    OnStateChanged="@OnStateChanged"
+    RowHeight="15"
+    Height="100%"
+    Data="@Ticks"
+    TItem="@ChartComponent.TradeApi"
+    ScrollMode="@GridScrollMode.Virtual"
+    Pageable="false"
+    Sortable="false"
+    PageSize="150">
     <GridColumns>
         <GridColumn Width="1fr" Field="@nameof(ChartComponent.TradeApi.Price)"  />
         <GridColumn Width="1fr" Field="@nameof(ChartComponent.TradeApi.Volume)" />
     </GridColumns>
 </TelerikGrid>
 
-<TelerikButton ThemeColor="@ThemeConstants.Button.ThemeColor.Primary" OnClick="@Scroll">Scroll</TelerikButton>
-<TelerikButton ThemeColor="@ThemeConstants.Button.ThemeColor.Primary" OnClick="@ChangeScale">CnahgeScale</TelerikButton>
-
 @code {
 
     private HotKeysContext? _hotKeysContext;
 
-    List<ChartComponent.TradeApi> Ticks { get; set; } = new();
+    public List<ChartComponent.TradeApi> Ticks { get; set; } = new();
     public TelerikGrid<ChartComponent.TradeApi> TicksGrid { get; set; }
 
     private void UpdateClastersGrid()
@@ -134,7 +130,7 @@ PageSize="150">
                 index++;
             }
 
-            Console.WriteLine($" RIH Created INITIAL EMPTY QUOTES SCALE {Scale}");
+            // Console.WriteLine($" RIH Created INITIAL EMPTY QUOTES SCALE {Scale}");
 
             //Quotes = localQuotesBuild;
 
@@ -227,7 +223,7 @@ PageSize="150">
         //InvokeAsync(StateHasChanged);
         UpdateClastersGrid();
 
-        Home.CreateTimerAndStart(() => 
+        WindowsComponent.CreateTimerAndStart(() => 
         {
 
             if (!scrolled)
@@ -249,14 +245,11 @@ PageSize="150">
 
     private void OnScroll(string arg1, string arg2, string arg3, int arg4)
     {
-
     }
 
     private void Scroll()
     {
         ScrollTo(2000, TicksGrid);
-
-
     }
 
     bool scrolllog = true;
@@ -279,7 +272,6 @@ PageSize="150">
 
         if (Ticks != null && Ticks.Count > (int)gridState.GridState.Skip && scrolllog)
             Console.WriteLine($"ONSTATE price SCROLL = {Ticks[(int)gridState.GridState.Skip].Price}");
-
 
         // var skip = (int)TicksGrid.GetState().Skip;
 

@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using TelerikBlazorAppTestChart.Components.Common
 
 <link rel="stylesheet" href="css/custom-telerik.css" />
 
@@ -120,19 +121,8 @@
         padding-block: 0 !important;
         padding-inline: 0 !important;
     }
-    /*.k-tilelayout-item-header{
-            display: none;
-            }*/
     .k-grid-content {
         padding: 0px;
-    }
-
-    .k-tilelayout-item-body k-card-body {
-        padding: 0px;
-    }
-    /* Убираем паддинги для всего TileLayout */
-    .telerik-tilelayout {
-        padding: 0;
     }
 
     .gridlayout-item {
@@ -189,10 +179,6 @@
         --dxbl-grid-font-size: 10px;
     }
 
-    .chart {
-        height: 90vh;
-    }
-
     .cell-text {
         font-weight: 750 !important;
     }
@@ -237,70 +223,45 @@
 
 </style>
 
+<template type="text/html">
+    <div class="chooseColor">
+        <div class="selectedColor"></div>
+        <ul>
+            <li style="background: #014FA1"></li>
+            <li style="background: #1D84BD"></li>
+            <li style="background: #EEEEEE"></li>
+            <li style="background: #F15C25"></li>
+            <li style="background: #EB0506"></li>
+        </ul>
+    </div>
+</template>
 
-<TelerikButton ThemeColor="@ThemeConstants.Button.ThemeColor.Primary" OnClick="@PlusSize">Plus</TelerikButton>
-<TelerikButton ThemeColor="@ThemeConstants.Button.ThemeColor.Primary" OnClick="@MinusSize">Minus</TelerikButton>
-
-<TelerikGridLayout>
-    <GridLayoutColumns>
-        <Telerik.Blazor.Components.GridLayoutColumn Width="20%" />
-        <Telerik.Blazor.Components.GridLayoutColumn Width="@gridsizestting" />
-        <Telerik.Blazor.Components.GridLayoutColumn Width="33%" />
-    </GridLayoutColumns>
-
-    <GridLayoutRows>
-        <Telerik.Blazor.Components.GridLayoutRow />
-    </GridLayoutRows>
-
-    <GridLayoutColumns>
-        <TelerikSplitter Orientation="@SplitterOrientation.Horizontal">
-            <SplitterPanes>
-                <SplitterPane Size="20%" Collapsible="false" Class="left-pane">
-                </SplitterPane>
-
-                <SplitterPane Collapsible="false" Class="center-pane">
-                    <ChartComponent></ChartComponent>
-                </SplitterPane>
-
-                <SplitterPane Size="33%" Collapsible="false" Class="right-pane">
-                    <TickGrid></TickGrid>
-                </SplitterPane>
-            </SplitterPanes>
-        </TelerikSplitter>
-    </GridLayoutColumns>
-
-</TelerikGridLayout>
-
-
-
-
+<div id="windows-1">
+    <WindowsComponent ElementId="@GenerateWindowsComponentElementID(0)"></WindowsComponent>
+</div>
+<div id="windows-2">
+    <WindowsComponent ElementId="@GenerateWindowsComponentElementID(1)"></WindowsComponent>
+</div>
+<div id="windows-3">
+    <WindowsComponent ElementId="@GenerateWindowsComponentElementID(2)"></WindowsComponent>
+</div>
 
 @code{
 
-    string gridsizestting => gridsize.ToString() + "%";
-    int gridsize = 47;
+    @inject IJSRuntime JSRuntime;
 
-    public static System.Timers.Timer CreateTimerAndStart(Action method, int ms, bool repeat = true)
+    private string GenerateWindowsComponentElementID(int index)
     {
-        var timer = new System.Timers.Timer(ms) { AutoReset = repeat };
-        timer.Elapsed += (s, e) =>
+        return "" + index;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
         {
-            method?.Invoke();
-        };
-        timer.Start();
-        return timer;
-    }
-
-    private void PlusSize(MouseEventArgs obj)
-    {
-        gridsize += 2;
-        StateHasChanged();
-    }
-
-    private void MinusSize(MouseEventArgs obj)
-    {
-        gridsize -= 2;
-        StateHasChanged();
+            await JSRuntime.InvokeVoidAsync("initGoldenLayout");
+        }
     }
 
 }
