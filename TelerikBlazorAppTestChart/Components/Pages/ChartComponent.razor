@@ -37,8 +37,8 @@
                          SizeField="@nameof(TradeApi.BubbleSize)"
                          ColorField="@nameof(TradeApi.Color)" Padding="0" Margin="0">
                 <ChartSeriesLabels Visible="true"
-                                   Template="chartSeriesLabelTemplate"
-                                   AriaTemplate="chartSeriesAriaTemplate" />
+                Template="chartSeriesLabelTemplate"
+                AriaTemplate="chartSeriesAriaTemplate" />
             </ChartSeries>
 
         </ChartSeries>
@@ -113,6 +113,7 @@
         TicksStandard.Add(new TradeApi() { IndexForChart = 0, Volume = Constants.DEFAULT_CHART_MAX_VOLUME });
         //
 
+        var t = _plazaService;
 
         _timer.Elapsed += (s, e) =>
         {

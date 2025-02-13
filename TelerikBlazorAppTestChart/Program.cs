@@ -45,8 +45,12 @@ builder.Services.Configure<CircuitOptions>(options =>
 builder.Services.AddHotKeys2();
 
 builder.Services.AddScoped<JsInteropService>();
+//builder.Services.AddSingleton<PlazaServiceTest>();
+
 
 var app = builder.Build();
+//PlazaServiceTest r = (PlazaServiceTest)app.Services.GetRequiredService<PlazaServiceTest>();
+//r.Start();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

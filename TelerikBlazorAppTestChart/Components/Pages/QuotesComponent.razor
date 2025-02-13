@@ -3,6 +3,7 @@
 @inject IJSRuntime JSRuntime
 @using Toolbelt.Blazor.HotKeys2
 @inject HotKeys HotKeys 
+@inject PlazaServiceTest _plazaService
 
 @*OnStateChanged="@OnStateChanged"
 OnStateInit="@OnStateChanged"
@@ -180,6 +181,9 @@ OnRowRender="@RowRender"
 
         if (firstRender)
         {
+
+            var t = _plazaService;
+
             _firstrender = true;
             jsInteropService.OnScroll += OnScroll;
             await JSRuntime.InvokeVoidAsync("getScrollEvent", GridTableId);
@@ -208,7 +212,7 @@ OnRowRender="@RowRender"
 
     bool busy = false;
     bool scrolled = false;
-    private void BuildAll()
+    private void BuildAll(bool scroll = true)
     {
         if(busy)
             return;
@@ -294,7 +298,12 @@ OnRowRender="@RowRender"
     private void ChangeScale(MouseEventArgs obj)
     {
         Scale +=1;
-        BuildAll();
+        BuildAll(false);
+    }
+    private void ChangeScale2(MouseEventArgs obj)
+    {
+        Scale -= 1;
+        BuildAll(false);
     }
 
 }
