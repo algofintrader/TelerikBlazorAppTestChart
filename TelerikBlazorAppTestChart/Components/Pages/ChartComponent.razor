@@ -1,6 +1,6 @@
 ﻿@using TelerikBlazorAppTestChart.Components.Common
 @using System.Timers
-@using Lock = System.Threading.Lock
+@* @using Lock = System.Threading.Lock *@
 @inject IJSRuntime JSRuntime
 
 <TelerikChart @ref="MainChart" Transitions="false" RenderAs="@RenderingMode.Canvas" Width="100%" Height="@Constants.VIEWPORT_HEIGHT_SIZE">
@@ -113,7 +113,6 @@
         TicksStandard.Add(new TradeApi() { IndexForChart = 0, Volume = Constants.DEFAULT_CHART_MAX_VOLUME });
         //
 
-        var t = _plazaService;
 
         _timer.Elapsed += (s, e) =>
         {

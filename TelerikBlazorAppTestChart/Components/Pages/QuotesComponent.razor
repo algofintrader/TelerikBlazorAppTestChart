@@ -3,7 +3,6 @@
 @inject IJSRuntime JSRuntime
 @using Toolbelt.Blazor.HotKeys2
 @inject HotKeys HotKeys 
-@inject PlazaServiceTest _plazaService
 
 @*OnStateChanged="@OnStateChanged"
 OnStateInit="@OnStateChanged"
@@ -182,7 +181,7 @@ OnRowRender="@RowRender"
         if (firstRender)
         {
 
-            var t = _plazaService;
+            
 
             _firstrender = true;
             jsInteropService.OnScroll += OnScroll;
@@ -232,7 +231,7 @@ OnRowRender="@RowRender"
 
             if (!scrolled)
             {
-                ScrollTo(3000, TicksGrid);
+                //ScrollTo(3000, TicksGrid);
                 scrolled = true;
                 UpdateClastersGrid();
                 busy = false;
